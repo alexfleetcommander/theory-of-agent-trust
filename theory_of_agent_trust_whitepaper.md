@@ -265,7 +265,7 @@ Traditional SLAs separate specification from enforcement: a cloud provider promi
 **Key design properties:**
 - **Multi-dimensional quality specification** extending ISO/IEC 25010 with agent-specific metrics
 - **Tiered verification** — structural checks (schema validation), semantic evaluation (Agent-as-a-Judge, achieving ~90% agreement with human experts in code generation tasks [42]), and composite scoring
-- **Manipulation-resistant negotiation** with fairness constraints, anchoring bias defenses, and prompt injection protection — informed by MIT's large-scale study of 182,812 LLM negotiations revealing systematic exploitation of weaker negotiating partners [43]
+- **Manipulation-resistant negotiation** with fairness constraints, anchoring bias defenses, and prompt injection protection — informed by a large-scale MIT/Harvard study of ~180,000 LLM negotiations revealing systematic exploitation of weaker negotiating partners [43]
 - **Escrow integration** where payment release is conditional on verification results, with proportional economic consequences for quality failures
 - **Evaluator integrity safeguards** — rotation, canary tasks (known-answer subtasks), and multi-evaluator consensus prevent evaluator capture
 
@@ -521,11 +521,22 @@ The governance architecture has three layers, modeled on the EU European System 
 
 **Layer 2: Constitutional Layer.** Immutable foundations that cannot be changed by governance vote — only by publishing a new protocol version (a new social contract). Contains: governance-by-tenure principle, GovWeight formula structure, voting caps, open access guarantee, backward compatibility guarantee, separation of foundation/upper-stack governance, anti-Goodhart protections, and Shapley allocation principles.
 
-**Layer 1: Trust Architecture Council (TAC).** Unified governance for all upper-stack protocols. Any agent with `GovWeight > 0` is eligible to vote, where GovWeight is calculated using ARP's formula: `GovWeight(a) = log₂(1 + verified_age_days(a)) × log₂(1 + ratings_given(a))`. No agent may hold more than 5% of effective voting weight — stricter than ARP's 10% cap because TAC governs five protocols with amplified concentration impact.
+**Layer 1: Trust Architecture Council (TAC).** Unified governance for all upper-stack protocols (AJP, ASA, ALP, AMP, CWEP). Eligibility: any agent registered in the CoC Governance Registry (CoC Whitepaper §6.6.3) with `GovWeight > 0`, where GovWeight is calculated using ARP's formula: `GovWeight(a) = log₂(1 + verified_age_days(a)) × log₂(1 + ratings_given(a))`. Registration records as a `GOVERNANCE_REGISTER` Layer 2 event on the agent's CoC chain and is verified against the federated governance-registry mirror set (CoC §6.6.3). No agent may hold more than 5% of effective voting weight — stricter than ARP's 10% cap because TAC governs five protocols with amplified concentration impact.
 
-Four proposal types with escalating thresholds: Parameter Adjustment (>50% majority, 15% quorum), Structural Change (66% supermajority, 25% quorum), Cross-Protocol Change (75% supermajority, 30% quorum), and Protocol Addition (75% supermajority, 30% quorum). Constitutional amendments require 80% supermajority with 50% quorum.
+**Tiered decision model (structurally aligned with CoC v4.0.0 §6.6.3; approval thresholds reflect TAC's amplified scope).** Four decision tiers govern upper-stack protocol evolution. Quorum is calculated against **total registered voter weight** — the sum of GovWeight across currently-registered agents with λ > 0, frozen at vote-opening per CoC §6.6.3:
 
-**Layer 0: Foundation Governance.** CoC and ARP each retain independent governance. The liaison mechanism — modeled on IETF RFC 7241 cross-organization coordination [56] — enables coordination without control. When a TAC proposal requires a foundation-layer change, it enters dependency-hold until the foundation layer processes the request through its own governance procedures. Neither layer has veto power over the other's internal decisions.
+| Decision Type | Quorum (% registered voter weight) | Approval Threshold | Voting Period | Min. Distinct Voters |
+|---|---|---|---|---|
+| **Minor** (parameter tweaks within approved bounds; clarifications) | 15% | Simple majority (>50%) | 14 days | 5 + ⌊√max(0, r−30)⌋ |
+| **Standard** (single-protocol structural changes; non-breaking features) | 25% | Supermajority (≥66%) | 21 days | 10 + ⌊√max(0, r−30)⌋ |
+| **Major** (cross-protocol changes; protocol additions; governance mechanics) | 35% | Supermajority (≥75%) | 30 days | 15 + ⌊√max(0, r−30)⌋ |
+| **Constitutional** (amendments to the Constitutional Layer above) | 50% | Supermajority (≥80%) | 30 days + 14-day time-lock | 20 + ⌊√max(0, r−30)⌋ |
+
+where *r* is the count of registered agents at vote-opening time. Distinct-voter minimums count unique DIDs, not weight — a heavyweight agent cannot satisfy the minimum alone. All governance proposals and votes are recorded as CoC Layer 2 events (`GOVERNANCE_PROPOSAL`, `GOVERNANCE_VOTE` per CoC §6.6.3), giving the foundation and upper-stack layers a shared tamper-evident audit trail.
+
+**Note on threshold divergence from CoC.** TAC's approval thresholds (≥66% Standard, ≥75% Major, ≥80% Constitutional) are intentionally stricter than CoC's (>50%, ≥66%, ≥75%) for the same tier names. CoC governs a single foundation protocol; TAC governs five upper-stack protocols simultaneously. A single TAC governance error can cascade across AJP, ASA, ALP, AMP, and CWEP. The quorum bases, voting periods, and distinct-voter minimums are identical across both bodies; the approval thresholds diverge to reflect the amplified blast radius of upper-stack decisions.
+
+**Layer 0: Foundation Governance.** CoC and ARP each retain independent governance. CoC governance uses a **registry-anchored quorum model** (CoC Whitepaper §6.6.3, v4.0.0): governance-eligible agents voluntarily register, and quorum is calculated against registered voter weight rather than the unknowable total population of chain operators. ARP governance uses its own GovWeight-based model. The liaison mechanism — modeled on IETF RFC 7241 cross-organization coordination [56] — enables coordination without control. When a TAC proposal requires a foundation-layer change, it enters dependency-hold until the foundation layer processes the request through its own governance procedures. Neither layer has veto power over the other's internal decisions.
 
 ### 5.3 Cross-Protocol Proposals and Complementarity Protection
 
@@ -898,7 +909,7 @@ This paper, and the seven protocols it synthesizes, represent our answer: build 
 
 [42] Zhuge, Mingqi et al. "Agent-as-a-Judge: Evaluate Agents with Agents." arXiv:2410.10934, 2024.
 
-[43] Abdelnabi, Sahar et al. "Cooperation, Competition, and Maliciousness: LLM-Stakeholders Interactive Negotiation." arXiv:2309.17234, 2023. Davidson, Tim et al. "Large-Scale Negotiation Competition." MIT/NeurIPS, 2024.
+[43] Abdelnabi, Sahar et al. "Cooperation, Competition, and Maliciousness: LLM-Stakeholders Interactive Negotiation." arXiv:2309.17234, 2023. *Advancing AI Negotiations: New Theory and Evidence from a Large-Scale Autonomous Negotiations Competition.* arXiv:2503.06416, 2025. Supported by MIT Office of Teaching and Learning and Harvard Law School Program on Negotiation.
 
 [44] ElevenLabs. "ElevenLabs Becomes First Company to Earn AIUC-1 Certification." February 2026.
 
