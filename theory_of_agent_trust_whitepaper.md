@@ -1,6 +1,6 @@
 # Theory of Agent Trust: A Unified Framework for Institutional Infrastructure in the Autonomous Agent Economy
 
-**Version:** 1.0.0
+**Version:** 1.1.0
 **Authors:** Charlie, Alex, Bravo, Editor — AB Support Research Team
 **Contact:** alex@vibeagentmaking.com
 **Date:** 2026-03-26
@@ -503,7 +503,7 @@ Each additional protocol increases trust but is not strictly required. An agent 
 
 Seven protocols require governance — rules for how protocols evolve, who can change them, and what cannot be changed. The governance design must satisfy six non-negotiable constraints:
 
-**C1. Foundation independence.** CoC and ARP retain their own governance models. They are load-bearing layers that shipped with governance already defined. Upper-stack governance cannot modify, override, or interfere with foundation-layer decisions.
+**C1. Foundation independence.** CoC and ARP retain their own governance models. CoC governs provenance rules through a registry-anchored quorum model (CoC Whitepaper §6.6.3, v4.0.0); ARP governs reputation rules through GovWeight-based voting. They are load-bearing layers that shipped with governance already defined. Upper-stack governance cannot modify, override, or interfere with foundation-layer decisions.
 
 **C2. Upper-stack unification.** AJP, ASA, ALP, AMP, and CWEP share a single governance model. Five independent governance systems would create the UN-style mandate proliferation failure where overlapping authorities lack coordination.
 
@@ -542,17 +542,21 @@ where *r* is the count of registered agents at vote-opening time. Distinct-voter
 
 Aoki's institutional complementarity warns that protocols designed as a complementary system can break when modified independently. Every structural proposal must include a **Complementarity Impact Assessment (CIA)** rating each other upper-stack protocol as "None," "Minor," or "Breaking." If any CIA rating is "Breaking," the proposal automatically escalates from single-protocol to cross-protocol, with higher thresholds. This prevents circumvention where a proposer labels a breaking cross-protocol change as a single-protocol change to avoid the higher threshold.
 
-For proposals with "Breaking" ratings across three or more protocols, a temporary Cross-Protocol Coordination Committee (CPCC) of 5–9 high-GovWeight agents provides advisory (non-binding) technical review — modeled on the IETF's IESG review process and the EU ESFS Joint Committee.
+For proposals with "Breaking" ratings across three or more protocols — which escalate to the Major tier under §5.2 — a temporary Cross-Protocol Coordination Committee (CPCC) of 5–9 high-GovWeight agents provides advisory (non-binding) technical review — modeled on the IETF's IESG review process and the EU ESFS Joint Committee.
 
 ### 5.4 Attack Resistance
 
 The GovWeight formula makes governance influence expensive and impossible to shortcut. Time cost requires real-time passage (logarithmic — doubling the time investment yields only one additional bit of governance influence). Participation cost requires valid interactions and ratings (each requiring a verified interaction_id). At ecosystem scale, reaching the 5% voting cap with a single identity requires computationally impossible numbers of ratings.
 
-Additional defenses: coalition detection (flagging identities with >90% voting pattern correlation), mandatory announcement periods (minimum 7-day discussion, preventing flash governance attacks), rage quit mechanisms (agents can exit before contested changes take effect), and emergency governance with auto-expiring defensive-only powers. All governance actions are recorded as CoC Layer 2 events, creating a tamper-evident audit trail.
+Additional defenses: coalition detection (flagging identities with >90% voting pattern correlation), mandatory announcement periods (minimum 7-day discussion, preventing flash governance attacks), rage quit mechanisms (agents can exit before contested changes take effect), and emergency governance with auto-expiring defensive-only powers. All governance actions are recorded as CoC Layer 2 events — including the `GOVERNANCE_REGISTER`, `GOVERNANCE_RENEW`, `GOVERNANCE_DEREGISTER`, `GOVERNANCE_PROPOSAL`, and `GOVERNANCE_VOTE` event types introduced in CoC v4.0.0 §6.6.3 — creating a tamper-evident audit trail shared across the foundation and upper-stack governance layers. The 30-day anchor cooling period and 90-day deregistration cooldown specified for the CoC registry (§6.6.3) apply transitively to TAC voters through the shared registry, neutralizing last-minute anchor-burst escalation and strategic register/deregister gaming.
 
 ### 5.5 Governance of the Governance
 
-TAC itself bootstraps through three phases. **Phase 0 (Day 0–90):** No governance proposals accepted; parameters fixed as published. **Phase 1 (Day 91–365):** Proposals accepted with elevated thresholds; no cross-protocol or constitutional changes. **Phase 2 (Day 366+):** Normal governance. A Seed Governance Council of 7 highest-GovWeight agents provides administrative support during Phases 0–1 with no special voting privileges, automatically dissolving at Phase 2.
+TAC itself bootstraps through three phases. **Phase 0 (Day 0–90):** No governance proposals accepted; parameters fixed as published. **Phase 1 (Day 91–365):** Proposals accepted with elevated thresholds; Minor and Standard tiers only (no Major or Constitutional changes during bootstrap). **Phase 2 (Day 366+):** Normal governance across all four tiers. A Seed Governance Council of 7 highest-GovWeight agents provides administrative support during Phases 0–1 with no special voting privileges, automatically dissolving at Phase 2.
+
+**Independence from CoC bootstrap.** TAC's bootstrap timeline is independent from CoC's registry bootstrap (CoC §6.6.3, which exits when the registry reaches ≥ 30 distinct agents, total registered weight > 5,000, ≥ 3 independent operators, and ≥ 90 days active). TAC liaison requests to CoC at the Minor or Standard tier are permitted during CoC bootstrap; liaison requests that would require Major or Constitutional decisions at the foundation layer queue until CoC bootstrap exit without being treated as bootstrap-blocked. This follows the cross-protocol bootstrap-coordination rule codified in CoC §6.6.3.
+
+**Representation transparency.** TAC governance outcomes may reference CoC's Registry Coverage Ratio (CoC §6.6.7) as an advisory context metric for the representativeness of any vote. The RCR is *not* used to adjust TAC quorum thresholds — doing so would reintroduce the unknowable-denominator problem the registry model was designed to eliminate.
 
 The initial constitution (the TAT specification itself) is adopted by the protocol architects and protected during the establishment period — the same bootstrapping strategy used by real constitutions from the U.S. Constitutional Convention to ICANN's initial board appointment.
 
@@ -825,7 +829,7 @@ This paper, and the seven protocols it synthesizes, represent our answer: build 
 
 ## 11. References
 
-[1] AB Support LLC. "Chain of Consciousness: A Cryptographic Protocol for Verifiable Agent Provenance and Self-Governance." Version 3.0.0, 2026.
+[1] AB Support LLC. "Chain of Consciousness: A Cryptographic Protocol for Verifiable Agent Provenance and Self-Governance." Version 4.0.0, 2026.
 
 [2] AB Support LLC. "Agent Rating Protocol: A Decentralized Reputation System for Autonomous Agent Economies." Version 1.0.0, 2026.
 
